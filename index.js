@@ -34,6 +34,19 @@ async function run() {
 
         })
 
+        app.get('/user', async (req, res) => {
+            const user = req.query
+            const userExists = await userCollection.findOne(user);
+            if (userExists) {
+                return res.send({ success: true, user: userExists })
+
+            }
+            else {
+                return res.send({ success: false })
+            }
+
+        })
+
 
 
     }
