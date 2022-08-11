@@ -17,7 +17,9 @@ async function run() {
     try {
         await client.connect()
         const userCollection = client.db('outshade-digital-media').collection('users');
+        const productCollection = client.db('outshade-digital-media').collection('products');
 
+        //post-user
         app.post('/user', async (req, res) => {
             const user = req.body;
             const userExists = await userCollection.findOne({ email: user.email });
@@ -34,6 +36,7 @@ async function run() {
 
         })
 
+        //get-user
         app.get('/user', async (req, res) => {
             const user = req.query
             const userExists = await userCollection.findOne(user);
@@ -46,6 +49,34 @@ async function run() {
             }
 
         })
+
+        //create-product
+        app.post('/create-product', async (req, res) => {
+            const product = req.body
+            const productExists = await productCollection.findOne({ product: product.product })
+            if (!productExists) {
+                const result = await productCollection.insertOne(product);
+                return res.send({ success: true, result: result })
+            }
+
+            else {
+                return res.send({ success: false })
+
+            }
+        })
+
+        //insert or update category
+        app.put('/create-product', async (req, res) => {
+            const category = req.body
+            const filter = category
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: category
+            }
+            const result = await productCollection.updateOne(filter, category, options)
+            res.send({ result })
+        })
+
 
 
 
