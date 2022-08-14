@@ -74,7 +74,7 @@ async function run() {
                 $set: category
             }
             const result = await productCollection.updateOne(filter, category, options)
-            res.send({ result })
+            res.send({ result });
         })
 
 
